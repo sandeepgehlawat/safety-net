@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Providers } from "./_components/Providers";
 
 const sans = Inter_Tight({
   subsets: ["latin"],
@@ -80,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${sans.variable} ${mono.variable} ${serif.variable} scroll-smooth`}>
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
-        {children}
+        <Providers>{children}</Providers>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

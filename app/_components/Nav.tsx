@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Mark } from "./primitives/Mark";
 import { NAV_LINKS } from "../_data/nav";
+import { ConnectWalletButton } from "./ConnectWalletButton";
 
 const DISMISS_KEY = "sn:announce:dismissed:v1";
 const FOCUSABLE_SELECTOR =
@@ -153,21 +154,7 @@ export default function Nav() {
                   Sign in
                 </a>
 
-                <button type="button" className="btn-wallet group hidden sm:inline-flex" aria-label="Connect wallet">
-                  <span className="btn-wallet-icon" aria-hidden="true">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M3 7h15a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7Zm0 0V6a2 2 0 0 1 2-2h11"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="17" cy="13" r="1.4" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <span className="btn-wallet-label">Connect wallet</span>
-                  <span aria-hidden="true" className="btn-wallet-arr">→</span>
-                </button>
+                <ConnectWalletButton variant="nav" className="hidden sm:inline-flex" />
 
                 <button
                   type="button"
@@ -229,13 +216,7 @@ export default function Nav() {
                 </li>
               ))}
             </ul>
-            <button
-              type="button"
-              className="btn-ink w-full justify-center mt-6"
-              onClick={() => setOpen(false)}
-            >
-              Connect wallet <span aria-hidden="true" className="arr">→</span>
-            </button>
+            <ConnectWalletButton variant="mobile" className="mt-6" />
           </div>
         </div>
       )}

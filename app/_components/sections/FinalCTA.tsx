@@ -1,4 +1,7 @@
+"use client";
+
 import { LivePill } from "../primitives/LivePill";
+import { ConnectWalletButton } from "../ConnectWalletButton";
 
 export function FinalCTA() {
   return (
@@ -10,9 +13,7 @@ export function FinalCTA() {
         <span className="font-serif italic">next wick.</span>
       </h2>
       <div className="mt-10 flex flex-wrap items-center justify-center gap-7">
-        <button type="button" className="btn-ink">
-          Connect wallet <span aria-hidden="true" className="arr">→</span>
-        </button>
+        <ConnectWalletButton variant="cta" />
         <a href="/docs" className="btn-ghost">
           Read the docs <span aria-hidden="true" className="text-mute">↗</span>
         </a>

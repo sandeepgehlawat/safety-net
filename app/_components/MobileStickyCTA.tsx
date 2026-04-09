@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ConnectWalletButton } from "./ConnectWalletButton";
 
 export default function MobileStickyCTA() {
   const [show, setShow] = useState(false);
@@ -29,13 +30,9 @@ export default function MobileStickyCTA() {
         show ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0 pointer-events-none"
       }`}
     >
-      <button
-        type="button"
-        tabIndex={show ? 0 : -1}
-        className="btn-ink w-full justify-center shadow-lg"
-      >
-        Connect wallet <span aria-hidden="true" className="arr">→</span>
-      </button>
+      <div className={show ? "" : "pointer-events-none"}>
+        <ConnectWalletButton variant="mobile" className="shadow-lg" />
+      </div>
     </div>
   );
 }

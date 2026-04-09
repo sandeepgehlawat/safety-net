@@ -16,7 +16,7 @@ export const FOOTER_COLUMNS: ReadonlyArray<FooterColumn> = [
   {
     h: "Developers",
     l: [
-      { label: "API Docs", href: `${API_URL}/docs`, external: true },
+      { label: "API Docs", href: "/docs" },
       { label: "GraphQL", href: `${API_URL}/graphql`, external: true },
       { label: "GitHub", href: "https://github.com/sandeepgehlawat/safety-net-backend", external: true },
     ],

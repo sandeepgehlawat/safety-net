@@ -68,7 +68,10 @@ html, body {
     inset 0 1px 0 rgba(255,255,255,.7),
     0 1px 0 rgba(12,12,12,.04),
     0 12px 32px -24px rgba(12,12,12,.18);
-  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s;
+  transition:
+    transform .7s cubic-bezier(.19,1,.22,1),
+    box-shadow .7s cubic-bezier(.19,1,.22,1),
+    border-color .5s ease;
 }
 .card-dark {
   background: linear-gradient(180deg, #131312 0%, #0a0a0a 100%);
@@ -78,11 +81,6 @@ html, body {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.06),
     0 24px 60px -30px rgba(0,0,0,.6);
-}
-.card { transition:
-    transform .7s cubic-bezier(.19,1,.22,1),
-    box-shadow .7s cubic-bezier(.19,1,.22,1),
-    border-color .5s ease;
 }
 .card:hover {
   transform: translateY(-3px);
@@ -363,7 +361,17 @@ html, body {
 
 @media (prefers-reduced-motion: reduce) {
   .dot, .ticker, .sweep::before, .rise { animation: none !important; }
+  .card, .card:hover,
+  .btn-ink, .btn-ink:hover,
+  .btn-wallet, .btn-wallet:hover {
+    transition: none !important;
+    transform: none !important;
+  }
+  html { scroll-behavior: auto !important; }
 }
+
+/* mobile menu open — locks scroll without inline styles */
+html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- type scale ---------- */
 .h-display {
@@ -385,3 +393,25 @@ html, body {
   outline-offset: 3px;
   border-radius: 6px;
 }
+
+/* anchor targets shouldn't hide under sticky nav */
+section[id], main[id] { scroll-margin-top: 96px; }
+
+/* skip link — visible only on keyboard focus */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  background: var(--color-ink);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  transform: translateY(-200%);
+  transition: transform .25s ease;
+}
+.skip-link:focus { transform: translateY(0); }
+
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .5; }

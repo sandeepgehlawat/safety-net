@@ -1,4 +1,4 @@
-import { Nav } from "../_components/Nav";
+import Nav from "../_components/Nav";
 import { Footer } from "../_components/sections/Footer";
 
 export default function PrivacyPage() {

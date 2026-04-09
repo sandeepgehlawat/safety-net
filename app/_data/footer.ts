@@ -1,7 +1,7 @@
 export type FooterLink = { label: string; href: string; external?: boolean };
 export type FooterColumn = { h: string; l: ReadonlyArray<FooterLink> };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-production-f77e.up.railway.app";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-backend-production.up.railway.app";
 
 export const FOOTER_COLUMNS: ReadonlyArray<FooterColumn> = [
   {

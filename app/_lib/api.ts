@@ -1,7 +1,7 @@
 // API Client for Safety Net Backend
 // Backend runs on port 3460
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-production-f77e.up.railway.app";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-backend-production.up.railway.app";
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://safety-net-production-f77e.up.railway.app/ws";
 
 // GraphQL client

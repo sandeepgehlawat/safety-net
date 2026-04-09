@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { TICKER_ITEMS } from "../../_data/content";
 
 // WebSocket URL for live ticker
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://safety-net-production-f77e.up.railway.app/ws";
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://safety-net-backend-production.up.railway.app/ws";
 
 export function LiveTicker() {
   const [events, setEvents] = useState<string[]>([...TICKER_ITEMS]);

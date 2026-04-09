@@ -5,7 +5,7 @@ import { Check } from "../primitives/Check";
 import { ProductWindow } from "../visuals/ProductWindow";
 import { ConnectWalletButton } from "../ConnectWalletButton";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-production-f77e.up.railway.app";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-backend-production.up.railway.app";
 
 export function Hero() {
   const [stats, setStats] = useState({

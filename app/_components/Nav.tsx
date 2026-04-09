@@ -200,8 +200,17 @@ export default function Nav() {
           className="fixed inset-0 z-[55] md:hidden"
         >
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="Close menu"
             className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
             onClick={() => setOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setOpen(false);
+              }
+            }}
           />
           <div
             ref={sheetRef}

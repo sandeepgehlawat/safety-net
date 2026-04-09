@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "15.1.6",
+    "next": "15.5.15",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
@@ -23,7 +23,7 @@
     "@types/react": "^19.0.0",
     "@types/node": "^22.0.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "15.1.6",
+    "eslint-config-next": "15.5.15",
     "eslint-plugin-jsx-a11y": "^6.10.0"
   }
 }

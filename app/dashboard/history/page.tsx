@@ -6,6 +6,7 @@ import { useAuth } from "../../_components/Providers";
 import { DashboardNav } from "../_components/DashboardNav";
 import { StatsBar } from "../_components/StatsBar";
 import { graphql } from "../../_lib/api";
+import { USE_MOCK_DATA, MOCK_TRANSACTIONS } from "../../_lib/mockData";
 
 interface Transaction {
   id: string;
@@ -61,12 +62,18 @@ export default function HistoryPage() {
 
     const fetchTransactions = async () => {
       try {
-        const data = await graphql<{ transactions: Transaction[] }>(
-          TRANSACTIONS_QUERY,
-          { limit: 50 },
-          token
-        );
-        setTransactions(data.transactions || []);
+        if (USE_MOCK_DATA) {
+          // Use mock data for development
+          await new Promise((r) => setTimeout(r, 400));
+          setTransactions(MOCK_TRANSACTIONS);
+        } else {
+          const data = await graphql<{ transactions: Transaction[] }>(
+            TRANSACTIONS_QUERY,
+            { limit: 50 },
+            token
+          );
+          setTransactions(data.transactions || []);
+        }
       } catch (err) {
         console.error("Failed to fetch transactions:", err);
         setError(err instanceof Error ? err.message : "Failed to load history");

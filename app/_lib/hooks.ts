@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createWebSocket, WsMessage, getGlobalStats } from "./api";
+import { USE_MOCK_DATA } from "./mockData";
 
 // Hook for WebSocket connection
 export function useWebSocket(token?: string) {
@@ -10,6 +11,12 @@ export function useWebSocket(token?: string) {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    // In mock mode, just simulate connection
+    if (USE_MOCK_DATA) {
+      setConnected(true);
+      return;
+    }
+
     const ws = createWebSocket(token);
     wsRef.current = ws;
 
@@ -50,13 +57,42 @@ export function useWebSocket(token?: string) {
   return { connected, lastMessage, send };
 }
 
+// Mock ticker events
+const MOCK_TICKER_EVENTS = [
+  "Protected $12,450 on Aave position for 0x1a2b...3c4d",
+  "Health factor restored to 2.1 for 0x5e6f...7g8h",
+  "LP position rebalanced on Uniswap v3",
+  "Alert triggered: HF dropped below 1.5",
+  "Autopilot repaid $3,200 USDC debt",
+  "New position detected on Morpho",
+  "Token watchlist alert: ARB -15%",
+  "Saved $8,750 from potential liquidation",
+];
+
 // Hook for live ticker (public, no auth required)
 export function useLiveTicker() {
   const [events, setEvents] = useState<string[]>([]);
   const { lastMessage, connected } = useWebSocket();
 
   useEffect(() => {
-    if (lastMessage?.type === "TickerEvent") {
+    if (USE_MOCK_DATA) {
+      // Initialize with some mock events
+      setEvents(MOCK_TICKER_EVENTS.slice(0, 5));
+
+      // Simulate live events
+      let idx = 0;
+      const interval = setInterval(() => {
+        idx = (idx + 1) % MOCK_TICKER_EVENTS.length;
+        const event = MOCK_TICKER_EVENTS[idx]!;
+        setEvents((prev) => [event, ...prev].slice(0, 20));
+      }, 8000);
+
+      return () => clearInterval(interval);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!USE_MOCK_DATA && lastMessage?.type === "TickerEvent") {
       setEvents((prev) => {
         const newEvents = [lastMessage.message, ...prev];
         return newEvents.slice(0, 20); // Keep last 20
@@ -64,7 +100,7 @@ export function useLiveTicker() {
     }
   }, [lastMessage]);
 
-  return { events, connected };
+  return { events, connected: USE_MOCK_DATA ? true : connected };
 }
 
 // Hook for global stats
@@ -78,6 +114,19 @@ export function useGlobalStats() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (USE_MOCK_DATA) {
+      // Mock global stats
+      setTimeout(() => {
+        setStats({
+          total_saved_usd: "2,847,392",
+          saved_this_week_usd: "142,500",
+          total_positions: 12847,
+        });
+        setLoading(false);
+      }, 300);
+      return;
+    }
+
     getGlobalStats()
       .then(setStats)
       .catch((e) => setError(e.message))

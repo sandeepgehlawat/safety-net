@@ -3,16 +3,37 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../_components/Providers";
 import { useWebSocket } from "../../_lib/hooks";
+import { USE_MOCK_DATA, MOCK_STATS } from "../../_lib/mockData";
 
 export function StatsBar() {
   const { token } = useAuth();
-  const { lastMessage, connected } = useWebSocket(token || undefined);
+  const { lastMessage, connected: wsConnected } = useWebSocket(token || undefined);
   const [blockNumber, setBlockNumber] = useState<number | null>(null);
   const [latencyMs, setLatencyMs] = useState<number | null>(null);
   const [positionsChecked, setPositionsChecked] = useState<number>(0);
 
+  // In mock mode, always show as connected with mock data
+  const connected = USE_MOCK_DATA ? true : wsConnected;
+
+  // Initialize with mock data
   useEffect(() => {
-    if (lastMessage?.type === "BlockProcessed") {
+    if (USE_MOCK_DATA) {
+      setBlockNumber(MOCK_STATS.blockNumber);
+      setLatencyMs(MOCK_STATS.latencyMs);
+      setPositionsChecked(MOCK_STATS.positionsChecked);
+
+      // Simulate live block updates
+      const interval = setInterval(() => {
+        setBlockNumber((prev) => (prev ? prev + 1 : MOCK_STATS.blockNumber));
+        setLatencyMs(Math.floor(Math.random() * 15) + 8);
+      }, 12000); // ~12 second block time
+
+      return () => clearInterval(interval);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!USE_MOCK_DATA && lastMessage?.type === "BlockProcessed") {
       setBlockNumber(lastMessage.block_number);
       setLatencyMs(lastMessage.latency_ms);
       setPositionsChecked(lastMessage.positions_checked);

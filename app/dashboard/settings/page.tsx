@@ -7,6 +7,7 @@ import { useDisconnect } from "wagmi";
 import { DashboardNav } from "../_components/DashboardNav";
 import { StatsBar } from "../_components/StatsBar";
 import { graphql } from "../../_lib/api";
+import { USE_MOCK_DATA } from "../../_lib/mockData";
 
 const UPDATE_NOTIFICATIONS = `
   mutation UpdateNotifications($fcmToken: String, $telegramChatId: String, $email: String, $enabled: Boolean!) {
@@ -42,6 +43,12 @@ export default function SettingsPage() {
 
   useEffect(() => {
     setMounted(true);
+    // Pre-fill with mock data in development
+    if (USE_MOCK_DATA) {
+      setEmail("user@example.com");
+      setTelegramId("987654321");
+      setDefaultThreshold("1.50");
+    }
   }, []);
 
   useEffect(() => {
@@ -55,15 +62,20 @@ export default function SettingsPage() {
     setSaving(true);
 
     try {
-      await graphql(
-        UPDATE_NOTIFICATIONS,
-        {
-          email: email || null,
-          telegramChatId: telegramId || null,
-          enabled: notificationsEnabled,
-        },
-        token
-      );
+      if (USE_MOCK_DATA) {
+        // Simulate save in mock mode
+        await new Promise((r) => setTimeout(r, 500));
+      } else {
+        await graphql(
+          UPDATE_NOTIFICATIONS,
+          {
+            email: email || null,
+            telegramChatId: telegramId || null,
+            enabled: notificationsEnabled,
+          },
+          token
+        );
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {

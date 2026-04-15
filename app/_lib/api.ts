@@ -1,6 +1,8 @@
 // API Client for Safety Net Backend
 // Backend runs on port 3460
 
+import { USE_MOCK_DATA } from "./mockData";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://safety-net-backend-production.up.railway.app";
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "wss://safety-net-production-f77e.up.railway.app/ws";
 
@@ -35,6 +37,24 @@ export async function graphql<T>(
 
 // Auth: Connect wallet
 export async function connectWallet(message: string, signature: string) {
+  if (USE_MOCK_DATA) {
+    // Extract wallet address from SIWE message
+    const addressMatch = message.match(/0x[a-fA-F0-9]{40}/);
+    const walletAddress = addressMatch ? addressMatch[0] : "0x1234567890123456789012345678901234567890";
+
+    // Return mock auth response
+    await new Promise((r) => setTimeout(r, 500)); // Simulate network delay
+    return {
+      token: `mock-jwt-token-${Date.now()}`,
+      user: {
+        id: `user-${walletAddress.slice(0, 8)}`,
+        wallet_address: walletAddress,
+        tier: "pro",
+        autopilot_enabled: false,
+      },
+    };
+  }
+
   const res = await fetch(`${API_URL}/auth/connect`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -7,6 +7,7 @@ import { DashboardNav } from "../_components/DashboardNav";
 import { StatsBar } from "../_components/StatsBar";
 import { graphql, QUERIES } from "../../_lib/api";
 import { useWebSocket } from "../../_lib/hooks";
+import { USE_MOCK_DATA, MOCK_LENDING_POSITIONS, MOCK_LP_POSITIONS } from "../../_lib/mockData";
 
 interface LendingPosition {
   id: string;
@@ -57,12 +58,19 @@ export default function PositionsPage() {
 
     const fetchPositions = async () => {
       try {
-        const [lendingData, lpData] = await Promise.all([
-          graphql<{ lendingPositions: LendingPosition[] }>(QUERIES.LENDING_POSITIONS, {}, token),
-          graphql<{ lpPositions: LpPosition[] }>(QUERIES.LP_POSITIONS, {}, token),
-        ]);
-        setLendingPositions(lendingData.lendingPositions || []);
-        setLpPositions(lpData.lpPositions || []);
+        if (USE_MOCK_DATA) {
+          // Use mock data for development
+          await new Promise((r) => setTimeout(r, 500));
+          setLendingPositions(MOCK_LENDING_POSITIONS);
+          setLpPositions(MOCK_LP_POSITIONS);
+        } else {
+          const [lendingData, lpData] = await Promise.all([
+            graphql<{ lendingPositions: LendingPosition[] }>(QUERIES.LENDING_POSITIONS, {}, token),
+            graphql<{ lpPositions: LpPosition[] }>(QUERIES.LP_POSITIONS, {}, token),
+          ]);
+          setLendingPositions(lendingData.lendingPositions || []);
+          setLpPositions(lpData.lpPositions || []);
+        }
       } catch (err) {
         console.error("Failed to fetch positions:", err);
         setError(err instanceof Error ? err.message : "Failed to load positions");

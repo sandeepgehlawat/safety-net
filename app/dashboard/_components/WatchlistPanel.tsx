@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../_components/Providers";
 import { graphql, QUERIES, MUTATIONS } from "../../_lib/api";
 import { useWebSocket } from "../../_lib/hooks";
+import { USE_MOCK_DATA, MOCK_WATCHLIST } from "../../_lib/mockData";
 
 interface TokenWatch {
   id: string;
@@ -30,12 +31,18 @@ export function WatchlistPanel() {
 
     const fetchWatchlist = async () => {
       try {
-        const data = await graphql<{ tokenWatchlist: TokenWatch[] }>(
-          QUERIES.TOKEN_WATCHLIST,
-          {},
-          token
-        );
-        setWatchlist(data.tokenWatchlist || []);
+        if (USE_MOCK_DATA) {
+          // Use mock data for development
+          await new Promise((r) => setTimeout(r, 300));
+          setWatchlist(MOCK_WATCHLIST);
+        } else {
+          const data = await graphql<{ tokenWatchlist: TokenWatch[] }>(
+            QUERIES.TOKEN_WATCHLIST,
+            {},
+            token
+          );
+          setWatchlist(data.tokenWatchlist || []);
+        }
       } catch (err) {
         console.error("Failed to fetch watchlist:", err);
         setError(err instanceof Error ? err.message : "Failed to load watchlist");

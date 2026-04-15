@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../_components/Providers";
 import { graphql, QUERIES, MUTATIONS } from "../../_lib/api";
 import { useWebSocket } from "../../_lib/hooks";
+import { USE_MOCK_DATA, MOCK_ALERTS } from "../../_lib/mockData";
 
 interface Alert {
   id: string;
@@ -37,12 +38,18 @@ export function AlertsPanel() {
 
     const fetchAlerts = async () => {
       try {
-        const data = await graphql<{ alerts: Alert[] }>(
-          QUERIES.ALERTS,
-          { limit: 10 },
-          token
-        );
-        setAlerts(data.alerts || []);
+        if (USE_MOCK_DATA) {
+          // Use mock data for development
+          await new Promise((r) => setTimeout(r, 400));
+          setAlerts(MOCK_ALERTS);
+        } else {
+          const data = await graphql<{ alerts: Alert[] }>(
+            QUERIES.ALERTS,
+            { limit: 10 },
+            token
+          );
+          setAlerts(data.alerts || []);
+        }
       } catch (err) {
         console.error("Failed to fetch alerts:", err);
         setError(err instanceof Error ? err.message : "Failed to load alerts");
